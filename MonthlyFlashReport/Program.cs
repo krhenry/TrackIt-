@@ -16,8 +16,6 @@ namespace MonthlyFlashReport
         static void Main(string[] args)
         {
             string datetime = DateTime.Now.ToString("yyyyMMddHHmmss");
-            var LineConnection = ConfigurationManager.AppSettings["LineConnection"];
-            var DBSchema = ConfigurationManager.AppSettings["DBSchema"];
             var prevMonth = DateTime.Now.AddMonths(-1).Month;
             var year = DateTime.Now.Year;
 
@@ -32,36 +30,11 @@ namespace MonthlyFlashReport
 
             try
             {
-                bool validDate;
-
                 Console.WriteLine("Console Application for TrackIt Flash Report.\nDefault Start and End dates will be set to last month: " + DateTime.Now.AddMonths(-1).ToString("MMMM") + "\n");
                 Console.WriteLine("Default Start Date is: " + StartDate);
                 Console.WriteLine("Default End Date is: " + EndDate.ToString("d") + "\n");
-                Console.WriteLine("Hit Enter to Run Report with default dates or enter start date (ex. 01/01/2016)");
-                var start = Console.ReadLine();
-                if (start != "")
-                {
-                    validDate = DateValidation(start);
 
-                    if (validDate == true)
-                    {
-                        StartDate = start.ToString();
-                    }
-
-                    Console.WriteLine("Enter end date");
-                    var end = Console.ReadLine();
-                    validDate = DateValidation(end);
-                    if (validDate == true)
-                    {
-                        EndDate = Convert.ToDateTime(end);
-                    }
-                }
-
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Running TrackIt Report from " + StartDate + " to " + EndDate.ToString("d"));
-                ExportToCSV(StartDate, EndDate.ToString("d"));
-                Console.ReadLine();
-
+                UserInput(StartDate, EndDate);
             }
 
             catch (Exception ex)
@@ -71,9 +44,47 @@ namespace MonthlyFlashReport
             }
         }
 
-        static bool DateValidation(string date)
+        static void UserInput(string StartDate, DateTime EndDate)
         {
-            var dateFormats = new[] { "dd.MM.yyyy", "dd-MM-yyyy", "dd/MM/yyyy", "d.M.yyyy", "d-M-yyyy", "d/M/yyyy" };
+            string validDate;
+            try
+            {
+                Console.WriteLine("Hit Enter to Run Report with default dates or enter start date (MM/dd/yyyy)");
+                var start = Console.ReadLine();
+                if (start != "")
+                {
+                    validDate = DateValidation(start);
+
+                    if (!string.IsNullOrEmpty(validDate))
+                    {
+                        StartDate = validDate.ToString();
+                    }
+
+                    Console.WriteLine("Enter end date");
+                    var end = Console.ReadLine();
+                    validDate = DateValidation(end);
+                    if (!string.IsNullOrEmpty(validDate))
+                    {
+                        EndDate = Convert.ToDateTime(validDate);
+                    }
+                }
+
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("Running TrackIt Report from " + StartDate + " to " + EndDate.ToString("d"));
+                ExportToCSV(StartDate, EndDate.ToString("d"));
+                Console.ReadLine();
+            }
+
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                Console.ReadLine();
+            }
+        }
+
+        static string DateValidation(string date)
+        {
+            var dateFormats = new[] { "MM.dd.yyyy", "MM-dd-yyyy", "MM/dd/yyyy", "M.d.yyyy", "M-d-yyyy", "M/d/yyyy", "M.dd.yyyy", "M-dd-yyyy", "M/dd/yyyy", "MM.d.yyyy", "MM-d-yyyy", "MM/d/yyyy" };
             bool validate = true;
 
             DateTime scheduleDate;
@@ -83,17 +94,17 @@ namespace MonthlyFlashReport
                 Console.WriteLine("Valid date");
                 Console.ForegroundColor = ConsoleColor.Gray;
                 validate = false;
-                return true;
+                return date;
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Invalid date: \"{0}\"", date);
                 Console.ForegroundColor = ConsoleColor.Gray;
-                Console.WriteLine("Enter valid date: MM/dd/yyyy");
+                Console.WriteLine("Enter valid date");
                 string dt = Console.ReadLine();
                 DateValidation(dt);
-                return false;
+                return dt;
             }
         }
 
@@ -108,7 +119,6 @@ namespace MonthlyFlashReport
                 string FileDelimiter = ","; //You can provide comma or pipe or whatever you like
                 string FileExtension = ".csv"; //Provide the extension you like such as .txt or .csv
                 var LineConnection = ConfigurationManager.AppSettings["LineConnection"];
-                var DBSchema = ConfigurationManager.AppSettings["DBSchema"];
 
                 //Create Connection to SQL Server in which you like to load files
                 SqlConnection SQLConnection = new SqlConnection();
@@ -125,7 +135,7 @@ namespace MonthlyFlashReport
                 //Prepare the file path 
                 StartDate = StartDate.Replace("/", "_");
                 EndDate = EndDate.Replace("/", "_");
-                string FileFullPath = DestinationFolder + "\\" + FileNamePart + " " + StartDate + " to " + EndDate.Replace("/", "_") + FileExtension;
+                string FileFullPath = DestinationFolder + "\\" + FileNamePart + " " + StartDate + " to " + EndDate + FileExtension;
 
                 StreamWriter sw = null;
                 sw = new StreamWriter(FileFullPath, false);
