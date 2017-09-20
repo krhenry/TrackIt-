@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace MonthlyFlashReport
 {
@@ -15,19 +12,19 @@ namespace MonthlyFlashReport
     {
         static void Main(string[] args)
         {
-            string datetime = DateTime.Now.ToString("yyyyMMddHHmmss");
             var prevMonth = DateTime.Now.AddMonths(-1).Month;
             var year = DateTime.Now.Year;
+            DateTime today = DateTime.Today;
+            DateTime EndDate = new DateTime(today.Year, today.AddMonths(-1).Month, DateTime.DaysInMonth(today.Year, today.AddMonths(-1).Month));
 
             if (prevMonth == 12)
             {
                 year = year - 1;
+                EndDate = new DateTime(today.AddYears(-1).Year, today.AddMonths(-1).Month, DateTime.DaysInMonth(today.AddYears(-1).Year, today.AddMonths(-1).Month));
             }
 
             string StartDate = prevMonth + "/1/" + year;
-            DateTime today = DateTime.Today;
-            DateTime EndDate = new DateTime(today.Year, today.AddMonths(-1).Month, DateTime.DaysInMonth(today.Year, today.AddMonths(-1).Month));
-
+            
             try
             {
                 Console.WriteLine("Console Application for TrackIt Flash Report.\nDefault Start and End dates will be set to last month: " + DateTime.Now.AddMonths(-1).ToString("MMMM") + "\n");
