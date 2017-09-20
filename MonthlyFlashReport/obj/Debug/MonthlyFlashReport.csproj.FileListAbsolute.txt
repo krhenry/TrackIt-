@@ -1,0 +1,6 @@
+c:\users\etg07\documents\visual studio 2015\Projects\MonthlyFlashReport\MonthlyFlashReport\bin\Debug\MonthlyFlashReport.exe.config
+c:\users\etg07\documents\visual studio 2015\Projects\MonthlyFlashReport\MonthlyFlashReport\bin\Debug\MonthlyFlashReport.exe
+c:\users\etg07\documents\visual studio 2015\Projects\MonthlyFlashReport\MonthlyFlashReport\bin\Debug\MonthlyFlashReport.pdb
+c:\users\etg07\documents\visual studio 2015\Projects\MonthlyFlashReport\MonthlyFlashReport\obj\Debug\MonthlyFlashReport.csprojResolveAssemblyReference.cache
+c:\users\etg07\documents\visual studio 2015\Projects\MonthlyFlashReport\MonthlyFlashReport\obj\Debug\MonthlyFlashReport.exe
+c:\users\etg07\documents\visual studio 2015\Projects\MonthlyFlashReport\MonthlyFlashReport\obj\Debug\MonthlyFlashReport.pdb
