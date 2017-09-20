@@ -4,3 +4,9 @@ c:\users\etg07\documents\visual studio 2015\Projects\MonthlyFlashReport\MonthlyF
 c:\users\etg07\documents\visual studio 2015\Projects\MonthlyFlashReport\MonthlyFlashReport\obj\Debug\MonthlyFlashReport.csprojResolveAssemblyReference.cache
 c:\users\etg07\documents\visual studio 2015\Projects\MonthlyFlashReport\MonthlyFlashReport\obj\Debug\MonthlyFlashReport.exe
 c:\users\etg07\documents\visual studio 2015\Projects\MonthlyFlashReport\MonthlyFlashReport\obj\Debug\MonthlyFlashReport.pdb
+C:\Clients\OLV\TrackIt\trackit-console-app\MonthlyFlashReport\obj\Debug\MonthlyFlashReport.csprojResolveAssemblyReference.cache
+C:\Clients\OLV\TrackIt\trackit-console-app\MonthlyFlashReport\obj\Debug\MonthlyFlashReport.exe
+C:\Clients\OLV\TrackIt\trackit-console-app\MonthlyFlashReport\obj\Debug\MonthlyFlashReport.pdb
+C:\Clients\OLV\TrackIt\trackit-console-app\MonthlyFlashReport\bin\Debug\MonthlyFlashReport.exe.config
+C:\Clients\OLV\TrackIt\trackit-console-app\MonthlyFlashReport\bin\Debug\MonthlyFlashReport.exe
+C:\Clients\OLV\TrackIt\trackit-console-app\MonthlyFlashReport\bin\Debug\MonthlyFlashReport.pdb
