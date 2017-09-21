@@ -45,7 +45,7 @@ namespace MonthlyFlashReport
 
         static void UserInput(string StartDate, string EndDate)
         {
-            string validDate;
+            bool validDate;
             try
             {
                 Console.WriteLine("Hit Enter to Run Report with default dates or enter start date (MM/dd/yyyy)");
@@ -54,23 +54,43 @@ namespace MonthlyFlashReport
                 {
                     validDate = DateValidation(start);
 
-                    if (!string.IsNullOrEmpty(validDate))
+                    while (validDate == false)
                     {
-                        StartDate = validDate.ToString();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid date: \"{0}\"", start);
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.WriteLine("Enter valid date");
+                        start = Console.ReadLine();
+                        validDate = DateValidation(start);
                     }
+                      
+                    StartDate = start.ToString();
 
                     Console.WriteLine("Enter end date");
                     var end = Console.ReadLine();
                     validDate = DateValidation(end);
-                    if (!string.IsNullOrEmpty(validDate))
+                    while (validDate == false)
                     {
-                        EndDate = validDate.ToString();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid date: \"{0}\"", end);
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.WriteLine("Enter valid date");
+                        end = Console.ReadLine();
+                        validDate = DateValidation(end);
                     }
+                    EndDate = end.ToString();
                 }
 
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Running TrackIt Report from " + StartDate + " to " + EndDate);
-                ExportToCSV(StartDate, EndDate);
+                if (Convert.ToDateTime(StartDate) > Convert.ToDateTime(EndDate))
+                {
+                    Console.WriteLine("Running TrackIt Report from " + EndDate + " to " + StartDate);
+                    ExportToCSV(EndDate, StartDate);
+                } else
+                {
+                    Console.WriteLine("Running TrackIt Report from " + StartDate + " to " + EndDate);
+                    ExportToCSV(StartDate, EndDate);
+                }
                 Console.ReadLine();
             }
 
@@ -81,7 +101,8 @@ namespace MonthlyFlashReport
             }
         }
 
-        static string DateValidation(string date)
+
+        static bool DateValidation(string date)
         {
             var dateFormats = new[] { "MM.dd.yyyy", "MM-dd-yyyy", "MM/dd/yyyy", "M.d.yyyy", "M-d-yyyy", "M/d/yyyy", "M.dd.yyyy", "M-dd-yyyy", "M/dd/yyyy", "MM.d.yyyy", "MM-d-yyyy", "MM/d/yyyy" };
             bool validate = true;
@@ -93,17 +114,11 @@ namespace MonthlyFlashReport
                 Console.WriteLine("Valid date");
                 Console.ForegroundColor = ConsoleColor.Gray;
                 validate = false;
-                return date;
+                return true;
             }
             else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Invalid date: \"{0}\"", date);
-                Console.ForegroundColor = ConsoleColor.Gray;
-                Console.WriteLine("Enter valid date");
-                string dt = Console.ReadLine();
-                DateValidation(dt);
-                return dt;
+            {  
+                return false;
             }
         }
 
