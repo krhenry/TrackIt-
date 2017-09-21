@@ -17,12 +17,12 @@ namespace MonthlyFlashReport
             string EndDate = prevMonth.ToString() + "/" + DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.AddMonths(-1).Month) + "/" + year;
             string StartTest = prevMonth + "/1/" + year;
 
-            if (prevMonth == 12)
+            if (DateTime.Now.Month == 1)
             {
                 year = year - 1;
 
-                EndDate = ("1/" + DateTime.DaysInMonth(DateTime.Now.AddYears(-1).Year, 1) + "/" + year).ToString();
-                StartTest = "1/1/" + year;
+                EndDate = ("12/" + DateTime.DaysInMonth(DateTime.Now.AddYears(-1).Year, 1) + "/" + year).ToString();
+                StartTest = "12/1/" + year;
             }
 
             string StartDate = prevMonth + "/1/" + year;
