@@ -14,13 +14,15 @@ namespace MonthlyFlashReport
         {
             var prevMonth = DateTime.Now.AddMonths(-1).Month;
             var year = DateTime.Now.Year;
-            DateTime today = DateTime.Today;
-            DateTime EndDate = new DateTime(today.Year, today.AddMonths(-1).Month, DateTime.DaysInMonth(today.Year, today.AddMonths(-1).Month));
+            string EndDate = prevMonth.ToString() + "/" + DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.AddMonths(-1).Month) + "/" + year;
+            string StartTest = prevMonth + "/1/" + year;
 
             if (prevMonth == 12)
             {
                 year = year - 1;
-                EndDate = new DateTime(today.AddYears(-1).Year, today.AddMonths(-1).Month, DateTime.DaysInMonth(today.AddYears(-1).Year, today.AddMonths(-1).Month));
+
+                EndDate = ("1/" + DateTime.DaysInMonth(DateTime.Now.AddYears(-1).Year, 1) + "/" + year).ToString();
+                StartTest = "1/1/" + year;
             }
 
             string StartDate = prevMonth + "/1/" + year;
@@ -29,7 +31,7 @@ namespace MonthlyFlashReport
             {
                 Console.WriteLine("Console Application for TrackIt Flash Report.\nDefault Start and End dates will be set to last month: " + DateTime.Now.AddMonths(-1).ToString("MMMM") + "\n");
                 Console.WriteLine("Default Start Date is: " + StartDate);
-                Console.WriteLine("Default End Date is: " + EndDate.ToString("d") + "\n");
+                Console.WriteLine("Default Start Date is: " + EndDate);
 
                 UserInput(StartDate, EndDate);
             }
@@ -41,7 +43,7 @@ namespace MonthlyFlashReport
             }
         }
 
-        static void UserInput(string StartDate, DateTime EndDate)
+        static void UserInput(string StartDate, string EndDate)
         {
             string validDate;
             try
@@ -62,17 +64,17 @@ namespace MonthlyFlashReport
                     validDate = DateValidation(end);
                     if (!string.IsNullOrEmpty(validDate))
                     {
-                        EndDate = Convert.ToDateTime(validDate);
+                        EndDate = validDate.ToString();
                     }
                 }
 
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Running TrackIt Report from " + StartDate + " to " + EndDate.ToString("d"));
-                ExportToCSV(StartDate, EndDate.ToString("d"));
+                Console.WriteLine("Running TrackIt Report from " + StartDate + " to " + EndDate);
+                ExportToCSV(StartDate, EndDate);
                 Console.ReadLine();
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
                 Console.ReadLine();
