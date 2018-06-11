@@ -5,24 +5,44 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 
+/// <summary>
+/// Purpose: An existing Stored Procedure is being executed at the beginning of each month to be emailed to the client for the previous months records. 
+///     Ex -> If today's date is Feb 1st, SP is executed and sent in an excel file to client from Jan 1st -> Jan 31st records.
+///     Client would like not to have to ask us to request this each month and be able to run this console application with user inputs. This CA will set the default
+///     dates to be last month's dates.
+/// 
+/// </summary>
+
 
 namespace MonthlyFlashReport
 {
     class Program
     {
+        /// <summary>
+        /// Main: 
+        ///     * Sets Defaults Dates.
+        ///     * Determines default date if the current month is January.
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
+            // Set Pevious Month
             var prevMonth = DateTime.Now.AddMonths(-1).Month;
+            // Set Current Month
             var year = DateTime.Now.Year;
+            // Set End Date. -> Previous Month. Last Day.
             string EndDate = prevMonth.ToString() + "/" + DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.AddMonths(-1).Month) + "/" + year;
-            string StartTest = prevMonth + "/1/" + year;
+            // Set Start Date. -> Previous Month. First Day.
+            string StartDay = prevMonth + "/1/" + year;
 
+
+            // Sets the date and month to Decemeber and previous year if the current month is January.
             if (DateTime.Now.Month == 1)
             {
                 year = year - 1;
 
                 EndDate = ("12/" + DateTime.DaysInMonth(DateTime.Now.AddYears(-1).Year, 1) + "/" + year).ToString();
-                StartTest = "12/1/" + year;
+                StartDay = "12/1/" + year;
             }
 
             string StartDate = prevMonth + "/1/" + year;
@@ -43,6 +63,12 @@ namespace MonthlyFlashReport
             }
         }
 
+        /// <summary>
+        /// StartDate and EndDate will go through validation to determine if the dates are valid.
+        /// If end date comes before start date, dates will flip so that it is passed to the stored procedure correctly.
+        /// </summary>
+        /// <param name="StartDate"></param>
+        /// <param name="EndDate"></param>
         static void UserInput(string StartDate, string EndDate)
         {
             bool validDate;
@@ -101,7 +127,12 @@ namespace MonthlyFlashReport
             }
         }
 
-
+        /// <summary>
+        /// Date Validation will check the format the user has inputted. There are several ways to pass in a valid date based on
+        /// the variable 'dateFormats'. 
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         static bool DateValidation(string date)
         {
             var dateFormats = new[] { "MM.dd.yyyy", "MM-dd-yyyy", "MM/dd/yyyy", "M.d.yyyy", "M-d-yyyy", "M/d/yyyy", "M.dd.yyyy", "M-dd-yyyy", "M/dd/yyyy", "MM.d.yyyy", "MM-d-yyyy", "MM/d/yyyy" };
@@ -122,6 +153,11 @@ namespace MonthlyFlashReport
             }
         }
 
+        /// <summary>
+        /// Function will execute SP and be sent to a specific file directory path in an excel file.
+        /// </summary>
+        /// <param name="StartDate"></param>
+        /// <param name="EndDate"></param>
         static void ExportToCSV(string StartDate, string EndDate)
         {
             try
@@ -139,7 +175,7 @@ namespace MonthlyFlashReport
                 SQLConnection.ConnectionString = LineConnection;
 
                 //Execute Stored Procedure and save results in data table
-                string query = "EXEC " + StoredProcedureName + " " + "'Surgical Wound'" + "," + "'Import'";
+                string query = "EXEC " + StoredProcedureName + " " + StartDate + "," + EndDate;
                 SqlCommand cmd = new SqlCommand(query, SQLConnection);
                 SQLConnection.Open();
                 DataTable d_table = new DataTable();
